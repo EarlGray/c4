@@ -12,6 +12,10 @@
 #include <memory.h>
 #include <sys/mman.h>
 
+int open (const char *path, int oflag, ...);
+ssize_t read (int fildes, void *buf, size_t nbyte);
+int close (int fildes);
+
 char *p, *lp, // current position in source code
      *jitmem, // executable memory for JIT-compiled native code
      *je,     // current position in emitted native code
@@ -49,11 +53,11 @@ enum Ty { CHAR, INT, PTR };
 // identifier offsets (since we can't create an ident struct)
 enum Identifier { Tk, Hash, Name, Class, Type, Val, HClass, HType, HVal, Idsz };
 
-next()
+void next()
 {
   char *pp;
 
-  while (tk = *p) {
+  while ((tk = *p)) {
     ++p;
     if (tk == '\n') {
       linemap[line] = lp; lp = p;
@@ -123,7 +127,7 @@ next()
   }
 }
 
-expr(int lev)
+void expr(int lev)
 {
   int t, *d;
 
@@ -264,7 +268,7 @@ expr(int lev)
   }
 }
 
-stmt()
+void stmt()
 {
   int *a, *b;
 
@@ -313,7 +317,7 @@ stmt()
   }
 }
 
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
   int fd, bt, ty, poolsz, *idmain;
   int *pc;
