@@ -20,6 +20,10 @@
 #define INT TYINT
 #endif
 
+int open (const char *path, int oflag, ...);
+ssize_t read (int fildes, void *buf, size_t nbyte);
+int close (int fildes);
+
 char *p, *lp, // current position in source code
      *jitmem, // executable memory for JIT-compiled native code
      *data,   // data/bss pointer
@@ -57,7 +61,7 @@ void next()
 {
   char *pp;
 
-  while (tk = *p) {
+  while ((tk = *p)) {
     ++p;
     if (tk == '\n') {
       if (src) {
